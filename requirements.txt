@@ -1,6 +1,5 @@
 streamlit
 openai
-langchain
 chromadb==0.3.25 
 langchain-community
 protobuf==3.20.*
