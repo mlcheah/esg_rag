@@ -1,8 +1,7 @@
 streamlit
 openai
 langchain
-python-dotenv
-chromadb
+chromadb==0.3.25 
 langchain-community
 protobuf==3.20.*
-chromadb==0.3.25 
+
