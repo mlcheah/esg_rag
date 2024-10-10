@@ -1,2 +1,2 @@
-# esg_rag
+# ESG RAG Project 
 Climate Risk Database
