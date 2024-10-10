@@ -1,6 +1,6 @@
 streamlit
 openai
-chromadb==0.3.25 
+chromadb
 langchain-community
 protobuf==3.20.*
 
