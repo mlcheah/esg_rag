@@ -4,3 +4,4 @@ langchain
 python-dotenv
 chromadb
 langchain-community
+protobuf==3.20.*
