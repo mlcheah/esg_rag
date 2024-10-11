@@ -3,4 +3,4 @@ openai
 chromadb
 langchain-community
 protobuf==3.20.*
-
+pysqlite3-binary
