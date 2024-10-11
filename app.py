@@ -22,7 +22,7 @@ if not api_key:
     st.error("The OpenAI API key is not set. Please add it to your .env file.")
     st.stop()
 
-CHROMA_PATH = 'tbd'
+CHROMA_PATH = 'https://storage.googleapis.com/esg_rag/chroma_10k_reports/chroma.sqlite3'
 
 PROMPT_TEMPLATE = """
 Answer the question based only on the following context:
