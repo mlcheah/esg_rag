@@ -7,7 +7,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
 
-# Import necessary modules to handle SQLite in Streamlit Cloud
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -24,23 +23,18 @@ if not api_key:
     st.error("The OpenAI API key is not set. Please add it to your .env file.")
     st.stop()
 
-# Set up the temporary path where the Chroma database will be downloaded
-CHROMA_LOCAL_PATH = '/tmp/chroma_10k_reports'
-
-# Google Cloud Storage path
+# Define your paths
 CHROMA_GCS_PATH = 'gs://esg_rag/chroma_10k_reports_sample/'
+CHROMA_LOCAL_PATH = '/tmp/chroma_10k_reports/'  # Local path to store downloaded files
 
-# Check if the folder doesn't exist yet and download the files from GCS
-if not os.path.exists(CHROMA_LOCAL_PATH):
-    os.makedirs(CHROMA_LOCAL_PATH)
-    # Download the Chroma files using gsutil
-    subprocess.run([
-        'gsutil', 'cp', '-r', 
-        f'{CHROMA_GCS_PATH}*', 
-        CHROMA_LOCAL_PATH
-    ])
+# Download Chroma files from the public GCS bucket to the local path
+subprocess.run([
+    'gsutil', 'cp', '-r', 
+    f'{CHROMA_GCS_PATH}*', 
+    CHROMA_LOCAL_PATH
+])
 
-# After download, use the local temporary path
+# Set the local path where Chroma should read files from
 CHROMA_PATH = CHROMA_LOCAL_PATH
 
 PROMPT_TEMPLATE = """
