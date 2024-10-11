@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-import subprocess
+from google.cloud import storage
 from langchain.vectorstores import Chroma
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
@@ -24,18 +24,29 @@ if not api_key:
     st.stop()
 
 # Define your paths
-CHROMA_GCS_PATH = 'gs://esg_rag/chroma_10k_reports_sample/'
-CHROMA_LOCAL_PATH = '/tmp/chroma_10k_reports/'  # Local path to store downloaded files
+CHROMA_GCS_PATH = 'esg_rag/chroma_10k_reports_sample/chroma.sqlite3'  # Path in GCS
+CHROMA_LOCAL_PATH = '/tmp/chroma_10k_reports_sample/chroma.sqlite3'  # Local path
 
-# Download Chroma files from the public GCS bucket to the local path
-subprocess.run([
-    'gsutil', 'cp', '-r', 
-    f'{CHROMA_GCS_PATH}*', 
-    CHROMA_LOCAL_PATH
-])
+# Google Cloud Storage bucket name
+BUCKET_NAME = "esg_rag"
+
+# Download file from GCS bucket
+def download_blob(bucket_name, source_blob_name, destination_file_name):
+    """Downloads a blob from the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+    
+    # Download the file to a local destination
+    blob.download_to_filename(destination_file_name)
+    st.write(f"Downloaded {source_blob_name} to {destination_file_name}.")
+
+# Download the Chroma SQLite database from GCS to local storage
+os.makedirs(os.path.dirname(CHROMA_LOCAL_PATH), exist_ok=True)
+download_blob(BUCKET_NAME, CHROMA_GCS_PATH, CHROMA_LOCAL_PATH)
 
 # Set the local path where Chroma should read files from
-CHROMA_PATH = CHROMA_LOCAL_PATH
+CHROMA_PATH = os.path.dirname(CHROMA_LOCAL_PATH)
 
 PROMPT_TEMPLATE = """
 Answer the question based only on the following context:
